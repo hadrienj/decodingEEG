@@ -1,0 +1,76 @@
+---
+title: "behavior"
+author: "hj"
+date: "29/06/2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+library(ggplot2)
+library(dplyr)
+
+cols <- c('#36BBB8', '#FF54A4', '#0E78D5')
+
+
+simpleTheme <- theme(panel.grid.major.y = element_blank(),
+                     strip.text = element_text(size=12),
+                     axis.line = element_line(color='grey60', size=1),
+                     axis.ticks = element_line(color = "grey60", size = 1),
+                     axis.title = element_text(color = "grey10", size=36),
+                     axis.text = element_text(color = "grey30", size=26),
+                     legend.text = element_text(color = "grey30", size=26),
+                     panel.background = element_blank(),
+                     legend.key = element_blank())
+
+
+data <-read.csv('behavior.csv')
+
+data$TC <- ifelse(data$TC == 'False', 0, 1)
+data$twoStreams <- ifelse(data$twoStreams == 'False', 0, 1)
+
+data$TC <- factor(data$TC, labels=c('Absent', 'Present'))
+
+
+```
+
+
+```{r, results='hide',fig.keep='all',fig.height=12, fig.width=12}
+
+effect_TC <- data %>%
+  filter(twoStreams==0) %>%
+  group_by(TC, name) %>%
+  summarise(mean1=mean(dprime)) %>%
+  ungroup() %>%
+  group_by(TC) %>%
+  summarise(mean=mean(mean1),
+            N=n(),
+            se=sd(mean1)/sqrt(N)) %>%
+  ggplot(data=., aes(x=TC, y=mean)) +
+    geom_bar(stat = 'identity', width = 0.5, position = position_dodge(width=0.1), fill='grey50') +
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.05) +
+    xlab('Tone cloud') +
+    ylab('D-prime') +
+    simpleTheme
+
+ggsave('images/effect_TC.pdf', effect_TC)
+
+exp2_dprime <- data %>%
+  filter(twoStreams==1) %>%
+  group_by(name) %>%
+  summarise(mean1=mean(dprime)) %>%
+  ungroup() %>%
+  group_by(TC) %>%
+  summarise(mean=mean(mean1),
+            N=n(),
+            se=sd(mean1)/sqrt(N)) %>%
+  ggplot(data=., aes(x=TC, y=mean)) +
+    geom_bar(stat = 'identity', width = 0.5, position = position_dodge(width=0.1)) +
+    geom_errorbar(aes(ymin=mean-se, ymax=mean+se), width=0.05) +
+    xlab('Tone cloud') +
+    ylab('D-prime') +
+    simpleTheme
+
+ggsave('images/exp2_dprime.pdf', exp2_dprime)
+```
+
