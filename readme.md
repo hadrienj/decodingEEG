@@ -2,7 +2,7 @@
 
 This is the repository containing all the code needed to analyse the data presented on the poster for the conference *CuttingEEG* in Paris 2nd-5th July 2018.
 
-![double AM](images/envAM.png)
+![double AM](envAM.png)
 
 The anonymised raw EEG data (`.bdf` files) will be made available as soon as possible.
 
