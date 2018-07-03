@@ -96,7 +96,7 @@ def getSSRAccuracyByDur(data, trials, fs):
 
 def crossVal(data, data1, fs):
     """
-    This function has changed. To update...
+    This function has changed. To update and rename...
 
     Parameters
     ----------

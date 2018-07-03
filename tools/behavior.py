@@ -75,18 +75,15 @@ def analyses(data, verbose):
     Evaluate the behavior data by computing hits rate and false alarm rates. The
     continuous responses given by the participant are compared to the time stamps
     of the gaps in the attended stream and also in the unattended (if there is
-    one). For each response:
-
-    - calculate the delay between this response and each attended gap
-    (`lagCorrect`).
-    - calculate the delay between this response and each unattended gap
-    (`laginCorrect`).
-    - keep only positive values in each array because the response is done after
-    the gap. This removes all other gaps for this response.
-    - take the smaller value in each array: `minCorrect` and `minIncorrect`.
-    - we consider that the response is linked to the gap if the delay is between
-    `minThresh` and `maxThresh`. The margins should avoid having bumps in the
-    two streams separated by less than maxThresh - minThresh.
+    one). For each response: 1.calculate the delay between this response and each
+    attended gap (`lagCorrect`). 2. calculate the delay between this response
+    and each unattended gap (`laginCorrect`). 3. keep only positive values in
+    each array because the response is done after the gap. This removes all
+    other gaps for this response. 4. take the smaller value in each
+    array: `minCorrect` and `minIncorrect`. 5. we consider that the response
+    is linked to the gap if the delay is between `minThresh` and `maxThresh`.
+    The margins should avoid having bumps in the two streams separated by less
+    than maxThresh - minThresh.
 
     Parameters
     ----------

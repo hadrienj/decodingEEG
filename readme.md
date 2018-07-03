@@ -15,23 +15,36 @@ The project is structured as following:
 - The notebook `preprocessing.ipynb` has to be run first to transform the raw `.bdf` files to the Numpy arrays containing the preprocessed data. It uses the file format `.h5` to store these data. It is compatible with Python and Matlab. Different datasets can be stored in each `.h5` file. In our case, we create one file per participant each containing:
 
 1- eeg_TRF: data preprocessed for the stimulus reconstruction analyses
+
 2- eeg_aSSR: data preprocessed for the aSSR analyses
+
 3- envAttended: all attended envelopes (80 trials per participant = 320)
+
 4- envUnattended all unattended envelopes (only from the exp 2 where there are two streams: 40 trials per participant = 160)
 
 - The notebook `analyses_aSSR.ipynb` contains the analyses related to the aSSR. It uses data created by the notebook `preprocessing.ipynb`.
 
 Some analyses have been done in R: see the file `behavior.Rmd`.
 
-The stimulus reconstruction has been done in the file `analyses_TRF.m` with the package [mTRF](https://sourceforge.net/projects/aespa/) by Crosse et al.
+Stimulus reconstruction has been done in the file `analyses_TRF.m` with the package [mTRF](https://sourceforge.net/projects/aespa/) by Crosse et al.
 
 # Tools
 
-You can find in this folder all python functions used in the analyses.
+You can find in this folder all python functions used in the analyses. The file `audio.py` contains the audio processing functions (envelope extraction, fetch audio files from th database etc.). The file `behavior.py` contain functions related to behavior analyses. It goes from getting the data from couchDB to do analyses like d-prime calculation. The files `decodingSSR.py` and `decodingTRF.py` can be used to do the auditory steady-state response (aSSR) analyses and stimulus reconstruction. It includes functions used to prepare the data in a way required for the analyses. Finally, the file `eeg_utils.py` contains functions used for preprocessing, or loading the data.
+
+# Credit
+
+These analyses use the Matlab open source package `mTRF`:
+
+You can find it [here](https://sourceforge.net/projects/aespa/).
+
+Crosse, M. J., Di Liberto, G. M., Bednar, A., & Lalor, E. C. (2016). The Multivariate Temporal Response Function (mTRF) Toolbox: A MATLAB Toolbox for Relating Neural Signals to Continuous Stimuli. Frontiers in Human Neuroscience, 10, 604. http://doi.org/10.3389/fnhum.2016.00604
+
+# API
+
+You can find here the functions documentation.
 
 ## audio.py
-
-This file contains the audio processing functions. Here are the functions:
 
 #### `audioToNP(audioWebm, stream, verbose=False)`
 
@@ -307,25 +320,20 @@ Returns:
 
 ## behavior.py
 
-This file contains all function related to behavior analyses. It goes from getting the data from couchDB to do analyses like d-prime calculation.
-
 #### `analyses(data, verbose)`
 
 Evaluate the behavior data by computing hits rate and false alarm rates. The
 continuous responses given by the participant are compared to the time stamps
 of the gaps in the attended stream and also in the unattended (if there is
-one). For each response:
-
-- calculate the delay between this response and each attended gap
-   (`lagCorrect`).
-- calculate the delay between this response and each unattended gap
-   (`laginCorrect`).
-- keep only positive values in each array because the response is done after
-   the gap. This removes all other gaps for this response.
-- take the smaller value in each array: `minCorrect` and `minIncorrect`.
-   - we consider that the response is linked to the gap if the delay is between
-`minThresh` and `maxThresh`. The margins should avoid having bumps in the
-two streams separated by less than maxThresh - minThresh.
+one). For each response: 1.calculate the delay between this response and each
+attended gap (`lagCorrect`). 2. calculate the delay between this response
+and each unattended gap (`laginCorrect`). 3. keep only positive values in
+each array because the response is done after the gap. This removes all
+other gaps for this response. 4. take the smaller value in each
+array: `minCorrect` and `minIncorrect`. 5. we consider that the response
+is linked to the gap if the delay is between `minThresh` and `maxThresh`.
+The margins should avoid having bumps in the two streams separated by less
+than maxThresh - minThresh.
 
 - **`data`** `instance of pandas.core.DataFrame`
 
@@ -334,8 +342,8 @@ two streams separated by less than maxThresh - minThresh.
 
    Print more details about the process.
 
-Returns
--------
+Returns:
+
    - **`analyses`** `instance of pandas.core.DataFrame`
 
 Dataframe containing the number of hits and false alarms for each trial.
@@ -349,8 +357,8 @@ by this answer. This allows to be sure that EEG data correspond to behavior.
 
    EEG data sampling frequency in Hz.
 
-Returns
--------
+Returns:
+
    
 
 #### `getBehaviorData(dbName, sessionNums)`
@@ -365,8 +373,8 @@ the sessions.
 
    List of sessions to keep.
 
-Returns
--------
+Returns:
+
    - **`behaviorData`** `instance of pandas.core.DataFrame`
 
 Dataframe containing all parameters of all trials.
@@ -385,8 +393,8 @@ Fetch behavior data from couchdb (SOA, SNR and trial duration).
 
    Behavior data will be fetched from this sessionNum.
 
-Returns
--------
+Returns:
+
    - **`allDoc`** `instance of pandas.core.DataFrame`
 
 A dataframe containing requested data.
@@ -409,8 +417,8 @@ in this dataset.
 
    All conditions can be passed as argument like `correctStream=[False]`.
 
-Returns
--------
+Returns:
+
    - **`allTrials`** `instance of numpy.array`
 
 List of trial numbers.
@@ -423,16 +431,14 @@ vertical gray lines.
 still to implement...
 
 
-Returns
--------
+Returns:
+
    - **`allTrials`** `instance of numpy.array`
 
 List of trial numbers.
 
 
 ## decodingSSR.py
-
-All functions used to performe the analyses of the aSSRs.
 
 #### `calculateBaseline(data, fs)`
 
@@ -444,8 +450,8 @@ the ratio between the AM rates in the one stream condition.
 
    EEG data of shape (trial, time, electrode).
 
-Returns
--------
+Returns:
+
    - **`ratio`** `float`
 
 Ratio between the 36 Hz stream and the 44 Hz stream.
@@ -460,8 +466,8 @@ the ratio between the AM rates in the one stream condition.
 
    EEG data of shape (time, electrode).
 
-Returns
--------
+Returns:
+
    - **`ratio`** `float`
 
 Ratio between the 36 Hz stream and the 44 Hz stream.
@@ -480,8 +486,8 @@ This function has changed. To update...
 
    Sampling frequency in Hz.
 
-Returns
--------
+Returns:
+
    - **`aAll`** `array-type`
 
 List of pick values for 36 Hz from `data`. Length of trial number.
@@ -501,8 +507,8 @@ participants and for each duration.
 
    Dataframe returned from the function 'hyperOptC'.
 
-Returns
--------
+Returns:
+
    - **`p1AccAll`** `array-type`
 
 List of accuracies for each duration with the better c parameter
@@ -534,8 +540,8 @@ Get the classification accuracy according to duration of trials and trials used.
 
    Sampling frequency in Hz.
 
-Returns
--------
+Returns:
+
    - **`allComparisons`** `array-type`
 
 Array containing all comparison (for each duration).
@@ -574,8 +580,8 @@ Also compute the accuracy for a set of durations.
    Behavior data from all participants.
 
 
-Returns
--------
+Returns:
+
    - **`bestC`** `instance of pandas.Dataframe`
 
 Dataframe containing the accuracy for each c parameter and duration.
@@ -632,8 +638,8 @@ Get the classification accuracy according to duration of trials and trials used.
    Trials to consider in the exp 2 referential (attended vs unattended with
 only 40 trials)
 
-Returns
--------
+Returns:
+
    - **`classifMismatchTime`** `array-type`
 
 List of classification accuracies (one value per second) for attended versus
@@ -673,8 +679,8 @@ envelope created from Matlab.
 
    Path to the `.h5` file containing the reconstructed envelopes.
 
-Returns
--------
+Returns:
+
    - **`eeg_TRF`** `instance of numpy.array`
 
 A matrix of shape (trial, time, electrode) containing the data processed
@@ -721,16 +727,8 @@ of all electrodes ('average').
 
    Sampling frequency in Hz.
 
-Returns
--------
+Returns:
+
    - **`dataFilt3D64`** `instance of numpy.array`
 
 A matrix of shape (trial, time, electrode) containing the processed data.
-
-# Credit
-
-These analyses use the Matlab open source package `mTRF`:
-
-You can find it [here](https://sourceforge.net/projects/aespa/).
-
-Crosse, M. J., Di Liberto, G. M., Bednar, A., & Lalor, E. C. (2016). The Multivariate Temporal Response Function (mTRF) Toolbox: A MATLAB Toolbox for Relating Neural Signals to Continuous Stimuli. Frontiers in Human Neuroscience, 10, 604. http://doi.org/10.3389/fnhum.2016.00604
