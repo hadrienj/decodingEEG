@@ -4,11 +4,31 @@ This is the repository containing all the code needed to analyse the data presen
 
 ![double AM](envAM.png)
 
+The aim of this project is to evaluate the possibility to use both auditory steady-state responses (aSSR) and stimulus reconstruction (SR) techiques from the same stimulus. For this purpose, we designed a double amplitude envelope: continuous streams were modulated by a first constant rate amplitude envelope (36 or 44 Hz) and by a random slower one. We used these two analyses to investigate the effect of informational masking in a first experiment and the effect of attention to one of two streams in a second experiment. We evaluated these methods by calculating a decoding accuracy (first experiment: decoding of the condition, 36 or 44 Hz streams; second experiment: decoding of what stream was attended).
+
+# Results
+
+## Auditory steady-state response
+
+The FFT of the EEG signal has been calculated from the averaged trials according to rate (36 or 44 Hz) and condition (with or without tone cloud). We can see that the aSSR is larger for trials without tone cloud.
+
+<img src="images/diff36.png" width="300">
+
+<img src="images/diff36TC.png" width="300">
+
+<img src="images/diff44.png" width="300">
+
+<img src="images/diff44TC.png" width="300">
+
+## TRF
+
+
+
+# Project structure
+
 The anonymised raw EEG data (`.bdf` files) will be made available as soon as possible.
 
-The project is structured as following:
-
-# Notebooks
+## Notebooks
 
 - The notebook `createStimViz.ipynb` is where some vizualisations from sound are made.
 
@@ -28,7 +48,7 @@ Some analyses have been done in R: see the file `behavior.Rmd`.
 
 Stimulus reconstruction has been done in the file `analyses_TRF.m` with the package [mTRF](https://sourceforge.net/projects/aespa/) by Crosse et al.
 
-# Tools
+## Tools
 
 You can find in this folder all python functions used in the analyses. The file `audio.py` contains the audio processing functions (envelope extraction, fetch audio files from th database etc.). The file `behavior.py` contain functions related to behavior analyses. It goes from getting the data from couchDB to do analyses like d-prime calculation. The files `decodingSSR.py` and `decodingTRF.py` can be used to do the auditory steady-state response (aSSR) analyses and stimulus reconstruction. It includes functions used to prepare the data in a way required for the analyses. Finally, the file `eeg_utils.py` contains functions used for preprocessing, or loading the data.
 
@@ -42,7 +62,7 @@ Crosse, M. J., Di Liberto, G. M., Bednar, A., & Lalor, E. C. (2016). The Multiva
 
 # API
 
-You can find here the functions documentation.
+You can find bellow the functions documentation:
 
 ## audio.py
 

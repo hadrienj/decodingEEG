@@ -105,7 +105,8 @@ def analyses(data, verbose):
     maxThresh = 1
 
     analyses = pd.DataFrame(columns=['trial', 'freqDiff', 'hit', 'hit1', 'FA',
-        'FA1', 'falseHit', 'allFA', 'dprime', 'TC', 'correctStream', 'twoStreams'])
+        'FA1', 'falseHit', 'allFA', 'dprime', 'TC', 'correctStream', 'twoStreams';
+        'gapNum'])
     trial = 0
     for i in data.trialNum:
         # get subset of data corresponding to the current trial
@@ -217,7 +218,8 @@ def analyses(data, verbose):
 
         analyses.loc[trial] = [trial, dataTrial.freqDiff.values[0],
             hitRatio, hitRatio1, FARatio, FARatio1, falseHit, allFA, dprime,
-            TC, dataTrial.correctStream.values[0], dataTrial.twoStreams.values[0]]
+            TC, dataTrial.correctStream.values[0], dataTrial.twoStreams.values[0],
+            gapNum]
 
         if verbose:
             plt.figure()
